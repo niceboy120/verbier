@@ -6,7 +6,7 @@ verbier is a framework inspired by Sinatra.
 	pear install pearhub/verbier
 
 ## Why?
-Every programming language ought to have a Sinatra inspired framework.
+Every programming language ought to have at least five Sinatra inspired frameworks.
 The idea of Sinatra is great and it is well suited for small apps.
 
 ## How?
