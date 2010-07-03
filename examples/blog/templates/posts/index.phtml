@@ -1,0 +1,10 @@
+<h1>Posts</h1>
+<? foreach ($this->posts as $post) : ?>
+	<article>
+		<header>
+			<h2><?= h($post->title) ?></h2>
+		</header>
+		
+		<?= $post->body ?>
+	</article>
+<? endforeach; ?>

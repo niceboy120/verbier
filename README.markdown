@@ -3,6 +3,8 @@ verbier
 
 verbier is a framework inspired by Sinatra.
 
+	pear install pearhub/verbier
+
 ## Why?
 Every programming language ought to have a Sinatra inspired framework.
 The idea of Sinatra is great and it is well suited for small apps.
@@ -69,5 +71,7 @@ You should try and use this structure for your apps:
 The public folder should be the only folder accessible from the browser and you should put `run()` in index.php.
 
 All route definitions should be put in app.php. what you use templates/ and models/ for is up to you, but it should be for template files and model classes.
+
+
 
 
