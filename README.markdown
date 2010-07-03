@@ -1,8 +1,11 @@
+verbier
+=======
+
 verbier is a framework inspired by Sinatra.
 
 ## Why?
 Every programming language ought to have a Sinatra clone.
-The idea of Sinatra is great and is well suited for small apps.
+The idea of Sinatra is great and it is well suited for small apps.
 
 ## How?
 Utilizing the power of PHP 5.3, we can make stuff like this:
@@ -12,11 +15,11 @@ Utilizing the power of PHP 5.3, we can make stuff like this:
 		return $this->render('posts/index');
 	});
 	
-Hey, what is that `$that`-thingy? Inside the closure we don't have access to `$this` and stuff like that. Therefore I have this crazy hacky context object `$that` which is an instance of `Verbier\Context`.  Makes life easier for all of us.
+Hey, what is that `$that`-thingy? Inside the closure we don't have access to `$this` and stuff like that. Therefore I have this crazy hacky macky context object `$that` which is an instance of `Verbier\Context`.  Makes life easier for all of us.
 
-All stuff you put into `$that` will be available in your views from `$this`:
+All stuff you put into `$that` will be available in your views from `$this`. In the template posts/index.phtml you can call `$this->posts` to grab the posts we assigned earlier.
 
-In the template posts/index.phtml you can call `$this->posts` to grab the posts we assigned earlier.
+Of course, you can use POST, PUT, DELETE as well. `post()`, `put()` and `delete()` are your friends.
 
 ## Dude, show me an app!
 Ok, here you go!
@@ -34,3 +37,18 @@ Ok, here you go!
 	run();
 
 Go to http://localhost/ or where your stuff are and you will see Hello World. Pretty cool?
+
+Sorry, I don't do Hello World. Okay, fine:
+
+	get('/posts', function($that) {
+		$that->posts = Post::findAll();
+		switch ($that->getFormat()) {
+			case 'json':
+			$that->response->setContentType('application/json');
+			return $that->posts->toJson();
+			break;
+			
+			default:
+			return $that->render('posts/index');
+		}
+	});
