@@ -2,15 +2,29 @@
 
 namespace Verbier;
 
-
+/**
+ * Generic template class
+ *
+ * @package Verbier
+ * @author Hans-Kristian Koren
+ */
 class Template {
 	
-	protected $layoutName;
-	
+	/**
+	 * undocumented function
+	 *
+	 * @param string $directory 
+	 */
 	public function __construct($directory) {
 		$this->directory = $directory;
 	}
 	
+	/**
+	 * Render the damn template
+	 *
+	 * @param string $templateName 
+	 * @return string
+	 */
 	public function render($templateName) {
 		ob_start();
 		
