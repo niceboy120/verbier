@@ -52,3 +52,22 @@ Sorry, I don't do Hello World. Okay, fine:
 			return $that->render('posts/index');
 		}
 	});
+
+## Setting up an app
+You should try and use this structure for your apps:
+
+	app.php
+	templates/
+	  hello.phtml
+	models/
+	README.markdown
+	lib/
+	  // Put all your libraries including verbier here
+	public/
+	  index.php
+
+The public folder should be the only folder accessible from the browser and you should put `run()` in index.php.
+
+All route definitions should be put in app.php. what you use templates/ and models/ for is up to you, but it should be for template files and model classes.
+
+
