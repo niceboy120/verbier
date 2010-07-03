@@ -4,15 +4,15 @@ verbier
 verbier is a framework inspired by Sinatra.
 
 ## Why?
-Every programming language ought to have a Sinatra clone.
+Every programming language ought to have a Sinatra inspired framework.
 The idea of Sinatra is great and it is well suited for small apps.
 
 ## How?
 Utilizing the power of PHP 5.3, we can make stuff like this:
 
-	get('/posts(.:format)', function($that) {
-		$that->posts = Post::findAll();
-		return $this->render('posts/index');
+	get('/posts/:slug', function($that) {
+		$that->post = Post::findBySlug($that->params['slug']);
+		return $this->render('posts/show');
 	});
 	
 Hey, what is that `$that`-thingy? Inside the closure we don't have access to `$this` and stuff like that. Therefore I have this crazy hacky macky context object `$that` which is an instance of `Verbier\Context`.  Makes life easier for all of us.
