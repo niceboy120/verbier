@@ -12,7 +12,7 @@ Utilizing the power of PHP 5.3, we can make stuff like this:
 
 	get('/posts/:slug', function($that) {
 		$that->post = Post::findBySlug($that->params['slug']);
-		return $this->render('posts/show');
+		return $that->render('posts/show');
 	});
 	
 Hey, what is that `$that`-thingy? Inside the closure we don't have access to `$this` and stuff like that. Therefore I have this crazy hacky macky context object `$that` which is an instance of `Verbier\Context`.  Makes life easier for all of us.
