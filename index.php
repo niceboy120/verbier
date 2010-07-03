@@ -9,8 +9,7 @@ get('/', function($that) {
 });
 
 get('/:name', function($that) {
-	$that->layout = 'default';
-	$that->name = 'Hanse';
+	$that->name = $that->params['name'];
 	return $that->render('hello');
 });
 
