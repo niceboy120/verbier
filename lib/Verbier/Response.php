@@ -2,6 +2,12 @@
 
 namespace Verbier;
 
+/**
+ * An class representing a HTTP response
+ *
+ * @package Verbier
+ * @author Hans-Kristian Koren
+ */
 class Response {
 	
 	/**
@@ -98,7 +104,6 @@ class Response {
 	 *
 	 * @param integer $statusCode 
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function setStatus($statusCode) {
 		if (!is_int($statusCode)) { throw new \InvalidArgumentException('The HTTP status code must be an integer'); }
@@ -109,7 +114,6 @@ class Response {
 	 * Get the status header (200 OK)
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function getStatus() {
 		return $this->statusCode . ' ' . $this->statusMessages[$statusCode];
@@ -120,7 +124,6 @@ class Response {
 	 *
 	 * @param string $contentType 
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function setContentType($contentType) {
 		$this->contentType = $contentType;
@@ -130,7 +133,6 @@ class Response {
 	 * Get the content type
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function getContentType() {
 		return $this->contentType;
@@ -153,7 +155,6 @@ class Response {
 	 *
 	 * @param string $header 
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function setHeader($header) {
 		$this->headers[] = $header;
@@ -163,7 +164,6 @@ class Response {
 	 * Get the response headers
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function getHeaders() {
 		return $this->headers;
@@ -173,7 +173,6 @@ class Response {
 	 * Send the HTTP headers if not already sent
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function sendHeaders() {
 		if (headers_sent()) {
@@ -193,7 +192,6 @@ class Response {
 	 * Send the entire response, headers and content
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function finish() {
 		$this->sendHeaders();
