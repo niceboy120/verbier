@@ -27,7 +27,7 @@ class Router {
 	
 	public function match(Request $request) {
 		foreach ($this->routes[$request->getMethod()] as $route) {
-			$regex = $route->getPattern();
+			$regex = $route->getPattern() . '(\.(?P<format>\w+))?';
 			$regex = preg_replace('/(:([a-z]+))/', '(?P<$2>[\w-]+)', $regex);
 			$regex = '/^' . str_replace('/', '\/', $regex) . '\/?$/i';
 
