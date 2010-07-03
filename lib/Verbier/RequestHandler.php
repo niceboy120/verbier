@@ -15,13 +15,16 @@ class RequestHandler {
 			throw new \BadMethodCallException('The supplied callback is not valid.');
 		}
 		
-		$context = new Context($request, $response);
+		$contextClass = Config::$contextClass;
+		$context = new $contextClass($request, $response);
 		$context->setParams($matches['params']);
 		
 		$result = call_user_func($matches['callback'], $context);
 		
 		if (is_string($result)) {
 			$response->setContent($result);
+		} elseif (is_int($result)) {
+			$response->setStatus($result);
 		}
 		
 		$response->finish();
