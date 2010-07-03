@@ -2,23 +2,59 @@
 
 namespace Verbier;
 
+/**
+ * The context class is passed to the app Closures and is quite hacky.
+ *
+ * @package default
+ */
 class Context {
 	
 	public $layout = NULL;
 	public $params;
 	
-	public function __construct($request, $response) {
+	/**
+	 * Constructor de magice
+	 *
+	 * @param \Verbier\Request $request 
+	 * @param \Verbier\Response $response 
+	 */
+	public function __construct(Request $request, Response $response) {
 		$this->request  = $request;
 		$this->response = $response;
 		$this->template = new \Verbier\Template(Config::$templatePath);
 	}
 	
-	public function setParams($params) {
+	/**
+	 * Set parameters. Do not touch this, handled internally by the request handler
+	 *
+	 * @param array $params 
+	 * @return void
+	 */
+	public function setParams(array $params) {
 		$this->params = array_merge($params, $this->request->params);
 	}
 	
+	/**
+	 * Get params. We never actually use this :P
+	 *
+	 * @return array
+	 */
 	public function getParams() {
 		return $this->params;
+	}
+	
+	/**
+	 * Get the requested format
+	 *
+	 * @return string
+	 * @todo Accepts
+	 */
+	public function getFormat() {
+		if (isset($this->params['format'])) {
+			return $this->params['format'];
+		}
+		// find a decent one based on accept headers
+		return NULL;
 	}
 	
 	/**
