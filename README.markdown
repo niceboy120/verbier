@@ -76,7 +76,15 @@ All route definitions should be put in app.php. what you use templates/ and mode
 Configuration can be done `configure()`. It takes two parameters: the environment and a closure.
 
 	configure('dev', function() {
+		enable('errors');
+	});
+	
+	configure('prod', function() {
 		disable('errors');
+	})
+	
+	configure('*', function() {
+		set('root', __DIR__);
 	});
 
 Set values with `set()`, `enable()` and `disable()`. Get your values with `option()`.
