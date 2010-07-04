@@ -21,7 +21,7 @@ class Context {
 	public function __construct(Request $request, Response $response) {
 		$this->request  = $request;
 		$this->response = $response;
-		$this->template = new \Verbier\Template(Config::$templatePath);
+		$this->template = new \Verbier\Template(option('templatePath'));
 	}
 	
 	/**

@@ -15,7 +15,7 @@ class RequestHandler {
 			throw new \BadMethodCallException('The supplied callback is not valid.');
 		}
 		
-		$contextClass = Config::$contextClass;
+		$contextClass = option('contextClass');
 		$context = new $contextClass($request, $response);
 		$context->setParams($matches['params']);
 		
