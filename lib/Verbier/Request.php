@@ -71,22 +71,7 @@ class Request {
 	 * @author Hans-Kristian Koren
 	 */
 	public function getPath() {
-		return $this->getURI()->getPath();
-	}
-	
-	/**
-	 * Return the current URI
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getURI() {
-		if (isset($this->environment['PATH_INFO'])) {
-			$requestURIString = $this->getProtocol() . '://' . $this->getHTTPHost() . $this->environment['PATH_INFO'] . (strlen($this->environment['QUERY_STRING']) ? '?' . $this->environment['QUERY_STRING'] : '');
-		} else {
-			$requestURIString = $this->getProtocol() . '://' . $this->getHTTPHost() . '/';
-		}
-		return new \Verbier\URIProperty($requestURIString);
+		return isset($this->environment['PATH_INFO']) ? $this->environment['PATH_INFO'] : '/';
 	}
 	
 	/**
