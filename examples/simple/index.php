@@ -4,9 +4,10 @@ set_include_path(implode(PATH_SEPARATOR, array('../../lib/', get_include_path())
 
 require 'Verbier.php';
 
-set('contextClass', 'Verbier\Context');
-set('templatePath', 'templates/');
-enable('errors');
+configure('*', function() {
+	enable('sessions');
+	enable('flash');
+});
 
 get('/', function($that) {
 	return 'Hello World';

@@ -10,7 +10,7 @@ namespace Verbier;
  */
 class Config {
 	
-	static $templatesPath = 'templates/';
+	static $templatePath = 'templates/';
 	static $contextClass = 'Verbier\Context';
 	static $sessions = TRUE;
 	static $flash = TRUE;

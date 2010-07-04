@@ -32,7 +32,7 @@ function disable($key) {
  * @return void
  */
 function set($key, $value) {
-	\Verbier\Config::$$key = $value
+	\Verbier\Config::$$key = $value;
 }
 
 /**
@@ -60,23 +60,24 @@ function configure($env, \Closure $closure) {
 }
 
 function get($pattern, $callback) {
-	R($pattern)->on('GET')->to($callback);
+	route($pattern, 'GET', $callback);
 }
 
 function post($pattern, $callback) {
-	R($pattern)->on('POST')->to($callback);
+	route($pattern, 'POST', $callback);
 }
 
 function put($pattern, $callback) {
-	R($pattern)->on('PUT')->to($callback);
+	route($pattern, 'PUT', $callback);
 }
 
 function delete($pattern, $callback) {
-	R($pattern)->on('DELETE')->to($callback);
+	route($pattern, 'DELETE', $callback);
 }
 
-function R($pattern) {
-	return new \Verbier\Route($pattern);
+function route($pattern, $method, $callback) {
+ 	$route = new \Verbier\Route($pattern, $method, $callback);
+	\Verbier\Router::getInstance()->addRoute($route);
 }
 
 function run() {
