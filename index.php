@@ -13,5 +13,9 @@ get('/:name', function($that) {
 	return $that->render('hello');
 });
 
+get('/exception', function($that) {
+	throw new \Exception('wants to test the exception renderer');
+});
+
 
 run();
