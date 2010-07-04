@@ -72,6 +72,11 @@ The public folder should be the only folder accessible from the browser and you 
 
 All route definitions should be put in app.php. what you use templates/ and models/ for is up to you, but it should be for template files and model classes.
 
+## Configuration
+Configuration can be done `configure()`. It takes two parameters: the environment and a closure.
 
+	configure('dev', function() {
+		disable('errors');
+	});
 
-
+Set values with `set()`, `enable()` and `disable()`. Get your values with `option()`.
