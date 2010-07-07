@@ -1,5 +1,10 @@
 <?php
 
+configure('*', function() {
+	enable('sessions');
+	enable('flash');
+	enable('errors');
+});
 
 get('/', function($that) {
 	$that->posts = Post::findAll();

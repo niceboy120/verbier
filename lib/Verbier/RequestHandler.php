@@ -19,7 +19,7 @@ class RequestHandler {
 		$context = new $contextClass($request, $response);
 		$context->setParams($matches['params']);
 		
-		$result = call_user_func($matches['callback'], $context);
+		$result = $matches['callback']($context);
 		
 		if (is_string($result)) {
 			$response->setContent($result);

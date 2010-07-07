@@ -4,8 +4,6 @@ verbier
 verbier is a framework inspired by Sinatra.
 
 	[sudo] pear install pearhub/verbier
-	
-	export VERBIER_ENV='dev'
 
 ## Why?
 Every programming language ought to have at least five Sinatra inspired frameworks.
