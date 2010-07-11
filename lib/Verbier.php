@@ -76,7 +76,7 @@ function delete($pattern, $callback) {
 }
 
 function route($pattern, $method, $callback) {
- 	$route = new \Verbier\Route($pattern, $method, $callback);
+ 	$route = array('pattern' => $pattern, 'method' => $method, 'callback' => $callback);
 	\Verbier\Router::getInstance()->addRoute($route);
 }
 

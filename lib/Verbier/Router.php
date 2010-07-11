@@ -20,19 +20,19 @@ class Router {
 		return self::$instance;
 	}
 	
-	public function addRoute(Route $route) {
-		$this->routes[$route->getMethod()][] = $route;
+	public function addRoute(array $route) {
+		$this->routes[$route['method']][] = $route;
 	}
 	
 	public function match(Request $request) {
 		foreach ($this->routes[$request->getMethod()] as $route) {
-			$regex = $route->getPattern() . '(\.(?P<format>\w+))?';
+			$regex = $route['pattern'] . '(\.(?P<format>\w+))?';
 			$regex = preg_replace('/(:([a-z]+))/', '(?P<$2>[\w-]+)', $regex);
 			$regex = '/^' . str_replace('/', '\/', $regex) . '\/?$/i';
 
 			if (preg_match($regex, $request->getPath(), $matches)) {
 				return array(
-					'callback' => $route->getCallback(),
+					'callback' => $route['callback'],
 					'params'   => $matches
 				);
 			}
