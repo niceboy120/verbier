@@ -15,21 +15,21 @@ class Request {
 	 *
 	 * @var array
 	 */
-	public $env = array();
+	protected $env = array();
 	
 	/**
 	 * Array of request parameters. These includes _GET, _POST and arguments from the router
 	 *
 	 * @var array
 	 */
-	public $params = array();
+	protected $params = array();
 	
 	/**
 	 * Array of request headers (SERVER vars beginning with HTTP_)
 	 *
 	 * @var array
 	 */
-	public $headers = array();
+	protected $headers = array();
 	
 	/**
 	 * Construct a new Request-object
