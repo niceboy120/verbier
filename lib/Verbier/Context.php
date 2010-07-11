@@ -80,8 +80,8 @@ class Context {
 	 * @return void
 	 * @todo Allow custom status codes via $options array
 	 */
-	public function redirect($location, array $options = array()) {
-		$this->response->setStatus(302);
+	public function redirect($location, $status = 302) {
+		$this->response->setStatus($status);
 		$this->response->setHeader('Location: ' . $location);
 		$this->response->finish();
 	}
