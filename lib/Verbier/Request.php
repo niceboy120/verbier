@@ -57,7 +57,7 @@ class Request {
 	}
 	
 	public function setParams(array $params) {
-		$thiss->params = array_merge($this->params, $params);
+		$this->params = array_merge($this->params, $params);
 	}
 	
 	/**
