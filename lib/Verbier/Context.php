@@ -10,7 +10,6 @@ namespace Verbier;
 class Context {
 	
 	public $layout = NULL;
-	public $params;
 	
 	/**
 	 * Constructor de magice
@@ -22,25 +21,6 @@ class Context {
 		$this->request  = $request;
 		$this->response = $response;
 		$this->template = new \Verbier\Template(option('templatePath'));
-	}
-	
-	/**
-	 * Set parameters. Do not touch this, handled internally by the request handler
-	 *
-	 * @param array $params 
-	 * @return void
-	 */
-	public function setParams(array $params) {
-		$this->params = array_merge($params, $this->request->params);
-	}
-	
-	/**
-	 * Get params. We never actually use this :P
-	 *
-	 * @return array
-	 */
-	public function getParams() {
-		return $this->params;
 	}
 	
 	/**

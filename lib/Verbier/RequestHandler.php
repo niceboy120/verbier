@@ -15,9 +15,10 @@ class RequestHandler {
 			throw new \BadMethodCallException('The supplied callback is not valid.');
 		}
 		
+		$request->setParams($matches['params']);
+		
 		$contextClass = option('contextClass');
 		$context = new $contextClass($request, $response);
-		$context->setParams($matches['params']);
 		
 		$result = $matches['callback']($context);
 		

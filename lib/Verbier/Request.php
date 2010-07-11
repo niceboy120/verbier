@@ -56,6 +56,9 @@ class Request {
 		return isset($this->headers[$name]) ? $this->headers[$name] : NULL;
 	}
 	
+	public function setParams(array $params) {
+		$thiss->params = array_merge($this->params, $params);
+	}
 	
 	/**
 	 * Return the method with whom the current request is requested with. It emulates browser support for PUT and DELETE
