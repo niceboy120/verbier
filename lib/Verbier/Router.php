@@ -4,28 +4,14 @@ namespace Verbier;
 
 class Router {
 	
-	static $instance = NULL;
+	static protected $routes = array();
 	
-	protected $routes;
-	
-	/**
-	 * I hate this, but I don't find a more decent way
-	 *
-	 * @return void
-	 */
-	static public function getInstance() {
-		if (!self::$instance instanceof self) {
-			self::$instance = new self();
-		}
-		return self::$instance;
+	static public function addRoute(array $route) {
+		self::$routes[$route['method']][] = $route;
 	}
 	
-	public function addRoute(array $route) {
-		$this->routes[$route['method']][] = $route;
-	}
-	
-	public function match(Request $request) {
-		foreach ($this->routes[$request->getMethod()] as $route) {
+	static public function match(Request $request) {
+		foreach (self::$routes[$request->getMethod()] as $route) {
 			$regex = $route['pattern'] . '(\.(?P<format>\w+))?';
 			$regex = preg_replace('/(:([a-z]+))/', '(?P<$2>[\w-]+)', $regex);
 			$regex = '/^' . str_replace('/', '\/', $regex) . '\/?$/i';
@@ -40,7 +26,7 @@ class Router {
 		return NULL;
 	}
 	
-	public function getRoutes() {
-		return $this->routes;
+	static public function getRoutes() {
+		return self::$routes;
 	}
 }

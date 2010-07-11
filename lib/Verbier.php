@@ -60,26 +60,36 @@ function configure($env, \Closure $closure) {
 }
 
 function get($pattern, $callback) {
-	route($pattern, 'GET', $callback);
+	\Verbier\Router::addRoute(array(
+		'pattern' => $pattern,
+		'method'  => 'GET',
+		'callback' => $callback
+	));
 }
 
 function post($pattern, $callback) {
-	route($pattern, 'POST', $callback);
+	\Verbier\Router::addRoute(array(
+		'pattern' => $pattern,
+		'method'  => 'POST',
+		'callback' => $callback
+	));
 }
 
 function put($pattern, $callback) {
-	route($pattern, 'PUT', $callback);
+	\Verbier\Router::addRoute(array(
+		'pattern' => $pattern,
+		'method'  => 'PUT',
+		'callback' => $callback
+	));
 }
 
 function delete($pattern, $callback) {
-	route($pattern, 'DELETE', $callback);
+	\Verbier\Router::addRoute(array(
+		'pattern' => $pattern,
+		'method'  => 'DELETE',
+		'callback' => $callback
+	));
 }
-
-function route($pattern, $method, $callback) {
- 	$route = array('pattern' => $pattern, 'method' => $method, 'callback' => $callback);
-	\Verbier\Router::getInstance()->addRoute($route);
-}
-
 function run() {
 	$request  = new \Verbier\Request();
 	$response = new \Verbier\Response();

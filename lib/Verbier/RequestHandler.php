@@ -5,7 +5,7 @@ namespace Verbier;
 class RequestHandler {
 	
 	public function handleRequest(Request $request, Response $response) {
-		$matches = \Verbier\Router::getInstance()->match($request);
+		$matches = \Verbier\Router::match($request);
 		
 		if ($matches === NULL) {
 			throw new \Exception('No routes match the given path `'.$request->getPath().'`');
