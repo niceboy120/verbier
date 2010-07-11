@@ -41,7 +41,8 @@ class Request {
 	public function __construct() {
 		$this->initializeFiles();
 		$this->environment = array_merge($_SERVER, $_ENV);
-		$this->params   = array_merge($_POST, $_GET, $_FILES);
+		$this->params      = array_merge($_POST, $_GET, $_FILES);
+		$this->headers     = $this->initHeaders();
 	}
 	
 	public function env($name) {
@@ -193,5 +194,16 @@ class Request {
 				}
 			}
 		}
+	}
+	
+	protected function initHeaders() {
+		$headers = array();
+		foreach ($this->env as $key => $value) {
+			if (substr($key, 0, 5) === 'HTTP_') {
+				$headerName = strtolower(substr($key, 5));
+				$headers[$headerName] = $value;
+			}
+		}
+		return $headers;
 	}
 }
