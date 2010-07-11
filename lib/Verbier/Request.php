@@ -15,7 +15,7 @@ class Request {
 	 *
 	 * @var array
 	 */
-	public $environment = array();
+	public $env = array();
 	
 	/**
 	 * Array of request parameters. These includes _GET, _POST and arguments from the router
@@ -23,6 +23,13 @@ class Request {
 	 * @var array
 	 */
 	public $params = array();
+	
+	/**
+	 * Array of request headers (SERVER vars beginning with HTTP_)
+	 *
+	 * @var array
+	 */
+	public $headers = array();
 	
 	/**
 	 * Construct a new Request-object
@@ -37,14 +44,18 @@ class Request {
 		$this->params   = array_merge($_POST, $_GET, $_FILES);
 	}
 	
-	/**
-	 * Get an array of URI params and other request params (_POST, _GET and _FILES)
-	 *
-	 * @return array
-	 */
-	public function getParams() {
-		return $this->params;
+	public function env($name) {
+		return isset($this->env[$name]) ? $this->env[$name] : NULL;
 	}
+	
+	public function param($name) {
+		return isset($this->params[$name]) ? $this->params[$name] : NULL;
+	}
+	
+	public function header($name) {
+		return isset($this->headers[$name]) ? $this->headers[$name] : NULL;
+	}
+	
 	
 	/**
 	 * Return the method with whom the current request is requested with. It emulates browser support for PUT and DELETE
@@ -72,88 +83,6 @@ class Request {
 	 */
 	public function getPath() {
 		return isset($this->environment['PATH_INFO']) ? $this->environment['PATH_INFO'] : '/';
-	}
-	
-	/**
-	 * Get the request protocol
-	 *
-	 * @todo Make it more useful by adding support for other protocols than http
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getProtocol() {
-		// @todo implement https
-		return 'http';
-	}
-	
-	/**
-	 * Get the HTTP HOST variable
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getHTTPHost() {
-		return $this->environment['HTTP_HOST'];
-	}
-	
-	/**
-	 * Get the HTTP referer variable
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getHTTPReferer() {
-		return isset($this->environment['HTTP_REFERER']) ? $this->environment['HTTP_REFERER'] : NULL;
-	}
-	
-	/**
-	 * Get the HTTP user agent
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getHTTPUserAgent() {
-		return isset($this->environment['HTTP_USER_AGENT']) ? $this->environment['HTTP_USER_AGENT'] : NULL;
-	}
-	
-	/**
-	 * Get the remote IP
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getRemoteIP() {
-		return isset($this->environment['REMOTE_ADDR']) ? $this->environment['REMOTE_ADDR'] : NULL;
-	}
-	
-	/**
-	 * Get the remote host
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getRemoteHost() {
-		return isset($this->environment['REMOTE_HOST']) ? $this->environment['REMOTE_HOST'] : NULL;
-	}
-	
-	/**
-	 * Get the server name
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getServerName() {
-		return isset($this->environment['SERVER_NAME']) ? $this->environment['SERVER_NAME'] : NULL;
-	}
-	
-	/**
-	 * Get the server address
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getServerAddr() {
-		return isset($this->environment['SERVER_ADDR']) ? $this->environment['SERVER_ADDR'] : NULL;
 	}
 	
 	/**
@@ -197,36 +126,6 @@ class Request {
 	}
 	
 	/**
-	 * By default, the nested _FILES array is quite a mess, so we have to restructure it
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function reorderFilesGlobal($group) {
-		if (!is_array($group['tmp_name'])) {
-			return $group;
-		}
-		$result = array();
-		foreach ($group as $property => $array) {
-			foreach ($array as $item => $value) {
-				$result[$item][$property] = $value;
-			}
-		}
-		return $result;
-	}
-	
-	/**
-	 * Return a response object that is suitable for requests made with this Request-object
-	 * Since this is a HTTP-request it is most useful and suitable to return a HTTP-response ;)
-	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
-	 */
-	public function getResponse() {
-		return new \Rapide\MVC\Http\Response();
-	}
-	
-	/**
 	 * Convenience method to check if the request is of type GET
 	 *
 	 * @return void
@@ -240,7 +139,6 @@ class Request {
 	 * Convenience method to check if the request is of type PUT
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function isPut() {
 		return $this->getMethod() === 'PUT';
@@ -250,7 +148,6 @@ class Request {
 	 * Convenience method to check if the request is of type POST
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function isPost() {
 		return $this->getMethod() === 'POST';
@@ -260,7 +157,6 @@ class Request {
 	 * Convenience method to check if the request is of type DELETE
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function isDelete() {
 		return $this->getMethod() === 'DELETE';
@@ -272,7 +168,18 @@ class Request {
 	 * @return void
 	 */
 	protected function initializeFiles() {
-		$_FILES = array_map(array($this, 'reorderFilesGlobal'), $_FILES);
+		$_FILES = array_map(function($group) {
+			if (!is_array($group['tmp_name'])) {
+				return $group;
+			}
+			$result = array();
+			foreach ($group as $property => $array) {
+				foreach ($array as $item => $value) {
+					$result[$item][$property] = $value;
+				}
+			}
+			return $result;
+		}, $_FILES);
 		
 		foreach ((array) $_FILES as $name => $options) {
 			if (isset($options['tmp_name'])) {
