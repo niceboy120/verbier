@@ -43,8 +43,4 @@ class Router {
 	public function getRoutes() {
 		return $this->routes;
 	}
-	
-	static public function debugRoutes() {
-		var_dump(self::getInstance()->getRoutes());
-	}
 }
