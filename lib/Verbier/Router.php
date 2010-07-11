@@ -12,7 +12,6 @@ class Router {
 	 * I hate this, but I don't find a more decent way
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	static public function getInstance() {
 		if (!self::$instance instanceof self) {
