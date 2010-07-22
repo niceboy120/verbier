@@ -9,7 +9,7 @@ get('/', function($that) {
 });
 
 get('/:name', function($that) {
-	$that->name = $that->params['name'];
+	$that->name = $that->request->param('name');
 	return $that->render('hello');
 });
 
