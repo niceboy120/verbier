@@ -1,26 +1,11 @@
 <?php
 
-configure('*', function() {
-	enable('sessions');
-	enable('flash');
-	enable('errors');
+get('/', function($self, $params) {
+	$self->posts = Post::all();
+	return $self->render('index');
 });
 
-get('/', function($that) {
-	$that->posts = Post::findAll();
-	return $that->render('posts/index');
-});
-
-post('/posts', function($that) {
-	$that->post = new Post($that->params['post']);
-	if ($that->post->save()) {
-		$that->setFlashNotice('The post was added');
-		return $that->redirect('/');
-	}
-	return $that->render('posts/new');
-});
-
-get('/posts/new', function($that) {
-	$that->post = new Post();
-	return $that->render('posts/new');
+get('/:slug', function($self, $params) {
+	$self->post = Post::where('slug = ?', array($params['slug']));
+	return $self->render('show');
 });
