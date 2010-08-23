@@ -4,13 +4,19 @@ set_include_path(implode(PATH_SEPARATOR, array('../../lib/', get_include_path())
 
 require 'Verbier.php';
 
-get('/', function() {
-	return 'Hello World';
+set('app_file', __FILE__);
+set('root', __DIR__);
+
+before(function() {
+	content_type('text/html');
 });
 
-get('/:name', function($self, $params) {
-	$self->name = $params['name'];
-	return $self->render('hello');
+get('/', function($self) {
+	return $self->settings['root'];
+});
+
+get('/:name', function($self, $name) {
+	return "Hello {$name}";
 });
 
 run();
