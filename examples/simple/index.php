@@ -21,3 +21,13 @@ get('/:name', function($self, $name) {
 
 run();
 
+function NSLog($message) {
+	$args = func_get_args();
+	Zend_Log::log(vsprintf(array_shift($args), $args));
+}
+
+class NSApplicationMain extends NSObject {
+	
+	public function applicationDidFinishLauncing() {
+	}
+}

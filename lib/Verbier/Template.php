@@ -18,7 +18,7 @@ class Template {
 	protected $layout;
 	
 	/**
-	 * undocumented function
+	 * Constructor.
 	 *
 	 * @param string $directory 
 	 */

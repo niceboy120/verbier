@@ -4,6 +4,8 @@ spl_autoload_register(function($className) {
 	include str_replace('\\', '/', $className) . '.php';
 });
 
+\Verbier\FlashMessage::init();
+
 $verbier = new \Verbier\Application();
 
 /**
@@ -60,6 +62,10 @@ function after($filter) {
 	$verbier->after($filter);
 }
 
+function flash($name, $value) {
+	global $verbier;
+	$verbier->flash($name, $value);
+}
 
 /**
  * Add configuration options for the given environment

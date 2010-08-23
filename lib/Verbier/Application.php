@@ -140,6 +140,17 @@ class Application {
 	}
 	
 	/**
+	 * Set a flash message.
+	 *
+	 * @param string $name 
+	 * @param string $value 
+	 * @return void
+	 */
+	public function flash($name, $value) {
+		FlashMessage::set($name, $value);
+	}
+	
+	/**
 	 * Run filters of type $type
 	 *
 	 * @param string $type 
@@ -207,7 +218,11 @@ class Application {
 	 * @param array $options 
 	 * @return void
 	 */
-	public function redirect($location, $status = 302) {
+	public function redirect($location, $options = array()) {
+		if (isset($options['notice'])) {
+			$this->flash('notice', $options['notice']);
+		}
+		$status = isset($options['status']) ? $options['status'] : 302;
 		$this->response->setStatus($status);
 		$this->response->setHeader('Location: ' . $location);
 		$this->response->finish();
