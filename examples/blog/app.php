@@ -5,7 +5,7 @@ get('/', function($self, $params) {
 	return $self->render('index');
 });
 
-get('/:slug', function($self, $params) {
-	$self->post = Post::where('slug = ?', array($params['slug']));
+get('/:slug', function($self, $slug) {
+	$self->post = Post::where('slug = ?', array($slug));
 	return $self->render('show');
 });

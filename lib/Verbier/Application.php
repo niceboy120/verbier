@@ -140,13 +140,16 @@ class Application {
 	}
 	
 	/**
-	 * Set a flash message.
+	 * Set/retrieve a flash message.
 	 *
 	 * @param string $name 
 	 * @param string $value 
 	 * @return void
 	 */
-	public function flash($name, $value) {
+	public function flash($name, $value = null) {
+		if ($value === null) {
+			return FlashMessage::get($name);
+		}
 		FlashMessage::set($name, $value);
 	}
 	

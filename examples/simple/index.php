@@ -12,22 +12,12 @@ before(function() {
 });
 
 get('/', function($self) {
-	return $self->settings['root'];
+	return 'Message: ' . flash('notice');
 });
 
 get('/:name', function($self, $name) {
-	return "Hello {$name}";
+	flash('notice', "Hello {$name}");
+	redirect('/');
 });
 
 run();
-
-function NSLog($message) {
-	$args = func_get_args();
-	Zend_Log::log(vsprintf(array_shift($args), $args));
-}
-
-class NSApplicationMain extends NSObject {
-	
-	public function applicationDidFinishLauncing() {
-	}
-}

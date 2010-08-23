@@ -4,9 +4,15 @@ spl_autoload_register(function($className) {
 	include str_replace('\\', '/', $className) . '.php';
 });
 
+session_start();
 \Verbier\FlashMessage::init();
 
 $verbier = new \Verbier\Application();
+
+/**
+ * Here we make the important methods of Verbier\Application available as
+ * global functions.
+ */
 
 /**
  * Flip the option to TRUE
@@ -52,6 +58,11 @@ function render($template, $variables = array()) {
 	return $verbier->render($template, $variables);
 }
 
+function redirect($location, $options = array()) {
+	global $verbier;
+	return $verbier->redirect($location, $options);
+}
+
 function before($filter) {
 	global $verbier;
 	$verbier->before($filter);
@@ -62,9 +73,9 @@ function after($filter) {
 	$verbier->after($filter);
 }
 
-function flash($name, $value) {
+function flash($name, $value = null) {
 	global $verbier;
-	$verbier->flash($name, $value);
+	return $verbier->flash($name, $value);
 }
 
 /**

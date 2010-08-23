@@ -103,3 +103,12 @@ Configuration can be done `configure()`. It takes two parameters: the environmen
 	});
 
 Set values with `set()`, `enable()` and `disable()`. Get your values through `$self->settings`.
+
+
+## Passing data to the view
+When using `render()`, there are two ways to pass data.
+1. Pass and associative array as the second parameter
+2. Add instance variables to Application: `$self->hello = 'world'`
+
+The former is preferable.
+
