@@ -11,6 +11,13 @@ namespace Verbier;
 class Template {
 	
 	/**
+	 * The layout to use.
+	 *
+	 * @var string
+	 */
+	protected $layout;
+	
+	/**
 	 * undocumented function
 	 *
 	 * @param string $directory 
@@ -20,12 +27,46 @@ class Template {
 	}
 	
 	/**
-	 * Render the damn template
+	 * Set the layout to use.
+	 *
+	 * @param string $layout 
+	 * @return void
+	 */
+	public function setLayout($layout = null) {
+		$this->layout = $layout;
+	}
+	
+	/**
+	 * Renders the given template.
 	 *
 	 * @param string $templateName 
 	 * @return string
 	 */
 	public function render($templateName) {
+		if ($this->layout === null) {
+			return $this->renderWithoutLayout($templateName);
+		}
+		return $this->renderWithLayout($templateName);
+	}
+	
+	/**
+	 * Renders the template inside a layout
+	 *
+	 * @param string $templateName 
+	 * @return string  The rendered template
+	 */
+	public function renderWithLayout($templateName) {
+		$this->contentForLayout = $this->_render($templateName);
+		return $this->render($this->layout);
+	}
+	
+	/**
+	 * Renders the template without a layout.
+	 *
+	 * @param string $templateName 
+	 * @return string
+	 */
+	public function renderWithoutLayout($templateName) {
 		ob_start();
 		
 		$path = $this->directory . $templateName . '.phtml';

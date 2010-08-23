@@ -5,7 +5,7 @@ namespace Verbier;
 /**
  * Class representing a HTTP request
  *
- * @package default
+ * @package Verbier
  * @author Hans-Kristian Koren
  */
 class Request {
@@ -36,7 +36,7 @@ class Request {
 	 *
 	 * This will basically populate the environment and arguments array as well as fix the _FILES array
 	 *
-	 * @author Hans-Kristian Koren
+	 * @todo
 	 */
 	public function __construct() {
 		$this->initializeFiles();
@@ -66,7 +66,6 @@ class Request {
 	 * by looking for a _method parameter in the _POST array on POST type request.
 	 *
 	 * @return string  The requested method
-	 * @author Hans-Kristian Koren
 	 */
 	public function getMethod() {
 		$requestMethod = strtoupper($this->environment['REQUEST_METHOD']);
@@ -82,8 +81,7 @@ class Request {
 	/**
 	 * Return the path portion of the current URI
 	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
+	 * @return string
 	 */
 	public function getPath() {
 		return isset($this->environment['PATH_INFO']) ? $this->environment['PATH_INFO'] : '/';
@@ -92,8 +90,7 @@ class Request {
 	/**
 	 * Get a comma separated list of accepts
 	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
+	 * @return array
 	 */
 	public function getAccepts() {
 		return explode(',', $this->environment['HTTP_ACCEPT']);
@@ -103,7 +100,7 @@ class Request {
 	 * Determine what content type to provide based on a set of candidates
 	 *
 	 * @param array $candidates 
-	 * @return void
+	 * @return string
 	 */
 	public function negotiateMimeType(array $candidates = NULL) {
 		$parsedAccepts = array();
@@ -132,8 +129,7 @@ class Request {
 	/**
 	 * Convenience method to check if the request is of type GET
 	 *
-	 * @return void
-	 * @author Hans-Kristian Koren
+	 * @return boolean
 	 */
 	public function isGet() {
 		return $this->getMethod() === 'GET';
@@ -142,7 +138,7 @@ class Request {
 	/**
 	 * Convenience method to check if the request is of type PUT
 	 *
-	 * @return void
+	 * @return boolean
 	 */
 	public function isPut() {
 		return $this->getMethod() === 'PUT';
@@ -151,7 +147,7 @@ class Request {
 	/**
 	 * Convenience method to check if the request is of type POST
 	 *
-	 * @return void
+	 * @return boolean
 	 */
 	public function isPost() {
 		return $this->getMethod() === 'POST';
@@ -160,7 +156,7 @@ class Request {
 	/**
 	 * Convenience method to check if the request is of type DELETE
 	 *
-	 * @return void
+	 * @return boolean
 	 */
 	public function isDelete() {
 		return $this->getMethod() === 'DELETE';

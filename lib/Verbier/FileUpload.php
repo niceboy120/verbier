@@ -39,7 +39,6 @@ class FileUpload {
 	 * Constructor
 	 *
 	 * @param string $options 
-	 * @author Hans-Kristian Koren
 	 */
 	public function __construct($options) {
 		$this->name        = $options['name'];
@@ -69,7 +68,6 @@ class FileUpload {
 	 * Get the content type (mime) of this file
 	 *
 	 * @return string
-	 * @author Hans-Kristian Koren
 	 */
 	public function getContentType() {
 		return $this->contentType;
@@ -79,7 +77,6 @@ class FileUpload {
 	 * Get the path to this file
 	 *
 	 * @return string
-	 * @author Hans-Kristian Koren
 	 */
 	public function getPath() {
 		return $this->path;
@@ -89,8 +86,7 @@ class FileUpload {
 	 * Move the uploaded file to a new location
 	 *
 	 * @param string $targetLocation 
-	 * @return bool
-	 * @author Hans-Kristian Koren
+	 * @return boolean
 	 */
 	public function copy($targetLocation) {
 		return move_uploaded_file($this->getPath(), $targetLocation);
@@ -99,8 +95,7 @@ class FileUpload {
 	/**
 	 * Is this an uploaded file?
 	 *
-	 * @return bool
-	 * @author Hans-Kristian Koren
+	 * @return boolean
 	 */
 	public function isUploaded() {
 		return is_uploaded_file($this->path);

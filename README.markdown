@@ -12,14 +12,15 @@ The idea of Sinatra is great and it is well suited for small apps.
 ## How?
 Utilizing the power of PHP 5.3, we can make stuff like this:
 
-	get('/posts/:slug', function($that) {
-		$that->post = Post::findBySlug($that->params['slug']);
-		return $that->render('posts/show');
+	get('/posts', function($self) {
+		render('posts/index', array(
+			'posts' => Post::findAll()
+		));
 	});
 	
-Hey, what is that `$that`-thingy? Inside the closure we don't have access to `$this` and stuff like that. Therefore I have this crazy hacky macky context object `$that` which is an instance of `Verbier\Context`.  Makes life easier for all of us.
+`$self` is an instance of `Verbier\Application`
 
-All stuff you put into `$that` will be available in your views from `$this`. In the template posts/index.phtml you can call `$this->posts` to grab the posts we assigned earlier.
+All stuff you put into `$self` will be available in your views from `$this`. In the template posts/index.phtml you can call `$this->posts` to grab the posts we assigned earlier.
 
 Of course, you can use POST, PUT, DELETE as well. `post()`, `put()` and `delete()` are your friends.
 
@@ -42,17 +43,10 @@ Go to http://localhost/ or where your stuff are and you will see Hello World. Pr
 
 Sorry, I don't do Hello World. Okay, fine:
 
-	get('/posts', function($that) {
-		$that->posts = Post::findAll();
-		switch ($that->getFormat()) {
-			case 'json':
-			$that->response->setContentType('application/json');
-			return $that->posts->toJson();
-			break;
-			
-			default:
-			return $that->render('posts/index');
-		}
+	get('/posts/:id', function($self, $id) {
+		render('posts/show', array(
+			'post' => Post::find($id)
+		));
 	});
 
 ## Setting up an app

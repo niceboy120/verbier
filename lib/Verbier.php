@@ -4,6 +4,8 @@ spl_autoload_register(function($className) {
 	include str_replace('\\', '/', $className) . '.php';
 });
 
+$verbier = new \Verbier\Application();
+
 /**
  * Flip the option to TRUE
  *
@@ -11,7 +13,8 @@ spl_autoload_register(function($className) {
  * @return void
  */
 function enable($key) {
-	set($key, true);
+	global $verbier;
+	$verbier->enable($key);
 }
 
 /**
@@ -21,7 +24,8 @@ function enable($key) {
  * @return void
  */
 function disable($key) {
-	set($key, false);
+	global $verbier;
+	$verbier->disable($key);
 }
 
 /**
@@ -32,18 +36,30 @@ function disable($key) {
  * @return void
  */
 function set($key, $value) {
-	\Verbier\Config::$$key = $value;
+	global $verbier;
+	$verbier->set($key, $value);
 }
 
-/**
- * Get an option
- *
- * @param string $key 
- * @return mixed
- */
-function option($key) {
-	return \Verbier\Config::$$key;
+function content_type($type) {
+	global $verbier;
+	$verbier->response->setContentType($type);
 }
+
+function render($template, $variables = array()) {
+	global $verbier;
+	return $verbier->render($template, $variables);
+}
+
+function before($filter) {
+	global $verbier;
+	$verbier->before($filter);
+}
+
+function after($filter) {
+	global $verbier;
+	$verbier->after($filter);
+}
+
 
 /**
  * Add configuration options for the given environment
@@ -59,41 +75,27 @@ function configure($env, \Closure $closure) {
 	}
 }
 
-function get($pattern, $callback) {
-	\Verbier\Router::addRoute(array(
-		'pattern' => $pattern,
-		'method'  => 'GET',
-		'callback' => $callback
-	));
+function get($pattern, $handler) {
+	global $verbier;
+	$verbier->get($pattern, $handler);
 }
 
-function post($pattern, $callback) {
-	\Verbier\Router::addRoute(array(
-		'pattern' => $pattern,
-		'method'  => 'POST',
-		'callback' => $callback
-	));
+function post($pattern, $handler) {
+	global $verbier;
+	$verbier->post($pattern, $handler);
 }
 
-function put($pattern, $callback) {
-	\Verbier\Router::addRoute(array(
-		'pattern' => $pattern,
-		'method'  => 'PUT',
-		'callback' => $callback
-	));
+function put($pattern, $handler) {
+	global $verbier;
+	$verbier->put($pattern, $handler);
 }
 
-function delete($pattern, $callback) {
-	\Verbier\Router::addRoute(array(
-		'pattern' => $pattern,
-		'method'  => 'DELETE',
-		'callback' => $callback
-	));
+function delete($pattern, $handler) {
+	global $verbier;
+	$verbier->delete($pattern, $handler);
 }
+
 function run() {
-	$request  = new \Verbier\Request();
-	$response = new \Verbier\Response();
-	
-	$requestHandler = new \Verbier\RequestHandler();
-	$requestHandler->handleRequest($request, $response);
+	global $verbier;
+	$verbier->run();
 }
