@@ -1,0 +1,5 @@
+namespace :hello do
+  task :world do
+    puts "Hello World from Verbier"
+  end
+end
