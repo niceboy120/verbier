@@ -11,11 +11,23 @@ namespace Verbier;
 class Template {
 	
 	/**
+	 * Template not found error message
+	 */
+	const TEMPLATE_NOT_FOUND = 'The template %s was not found.';
+	
+	/**
+	 * The directory in which the templates are located.
+	 *
+	 * @var string
+	 */
+	protected $directory;
+	
+	/**
 	 * The layout to use.
 	 *
 	 * @var string
 	 */
-	protected $layout;
+	protected $layout = null;
 	
 	/**
 	 * Constructor.
@@ -56,7 +68,7 @@ class Template {
 	 * @return string  The rendered template
 	 */
 	public function renderWithLayout($templateName) {
-		$this->contentForLayout = $this->_render($templateName);
+		$this->contentForLayout = $this->renderWithoutLayout($templateName);
 		return $this->render($this->layout);
 	}
 	
@@ -71,7 +83,7 @@ class Template {
 		
 		$path = $this->directory . $templateName . '.phtml';
 		if (!file_exists($path)) {
-			throw new \Exception('The template `'.$path.'` was not found');
+			throw new \Exception(sprintf(static::TEMPLATE_NOT_FOUND, $path));
 		}
 		
 		include $path;
