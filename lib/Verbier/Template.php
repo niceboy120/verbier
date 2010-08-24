@@ -82,7 +82,7 @@ class Template {
 		ob_start();
 		
 		$path = $this->directory . $templateName . '.phtml';
-		if (!file_exists($path)) {
+		if (!is_readable($path)) {
 			throw new \Exception(sprintf(static::TEMPLATE_NOT_FOUND, $path));
 		}
 		
