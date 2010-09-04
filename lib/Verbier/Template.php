@@ -39,7 +39,7 @@ class Template {
 	}
 	
 	/**
-	 * Set the layout to use.
+	 * Set the layout to use. Layouts must reside inside layouts/ in the template directory.
 	 *
 	 * @param string $layout 
 	 * @return void
@@ -62,10 +62,10 @@ class Template {
 	}
 	
 	/**
-	 * Renders the template inside a layout
+	 * Renders the template inside a layout.
 	 *
-	 * @param string $templateName 
-	 * @return string  The rendered template
+	 * @param string $templateName The template to render.
+	 * @return string The rendered template.
 	 */
 	public function renderWithLayout($templateName) {
 		$this->contentForLayout = $this->renderWithoutLayout($templateName);
@@ -75,8 +75,8 @@ class Template {
 	/**
 	 * Renders the template without a layout.
 	 *
-	 * @param string $templateName 
-	 * @return string
+	 * @param string $templateName The template to render.
+	 * @return string The rendered template.
 	 */
 	public function renderWithoutLayout($templateName) {
 		ob_start();

@@ -50,6 +50,13 @@ class Application {
 		'after'  => array()
 	);
 	
+	protected $apiMethods = array(
+		'get', 'post', 'put', 'delete',
+		'render', 'redirect', 'flash',
+		'set', 'enable', 'disable',
+		'before', 'after', 'run'
+	);
+	
 	/**
 	 * Construct a new application.
 	 *
@@ -61,7 +68,7 @@ class Application {
 		$this->dispatcher = $dispatcher === null ? new Dispatcher($this) : $dispatcher;
 		$this->request    = new Request();
 		$this->response   = new Response();
-		$this->template   = new Template($this->settings['templates']);
+		$this->template   = new Template(APP_PATH . '/views/');
 	}
 	
 	/**
@@ -154,6 +161,16 @@ class Application {
 	}
 	
 	/**
+	 * Set the layout name.
+	 *
+	 * @param string $layout 
+	 * @return void
+	 */
+	public function layout($layout) {
+		$this->template->setLayout($layout);
+	}
+	
+	/**
 	 * Run filters of type $type
 	 *
 	 * @param string $type 
@@ -189,7 +206,6 @@ class Application {
 	 * Run the application.
 	 *
 	 * @return void
-	 * @author Hans-Kristian Koren
 	 */
 	public function run() {
 		$this->filter('before');

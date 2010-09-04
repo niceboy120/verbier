@@ -1,7 +1,7 @@
 <?php
 
 spl_autoload_register(function($className) {
-	include str_replace('\\', '/', $className) . '.php';
+	include str_replace(array('\\', '_'), '/', $className) . '.php';
 });
 
 session_start();
@@ -9,10 +9,6 @@ session_start();
 
 $verbier = new \Verbier\Application();
 
-/**
- * Here we make the important methods of Verbier\Application available as
- * global functions.
- */
 
 /**
  * Flip the option to TRUE
@@ -78,14 +74,6 @@ function flash($name, $value = null) {
 	return $verbier->flash($name, $value);
 }
 
-/**
- * Add configuration options for the given environment
- * The closure won't be invoked unless the environment is correct
- *
- * @param string $env 
- * @param Closure $closure 
- * @return void
- */
 function configure($env, \Closure $closure) {
 	if ($env == getenv('VERBIER_ENV') || $env == '*') {
 		$closure();

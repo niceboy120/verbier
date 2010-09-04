@@ -177,3 +177,42 @@ function pluralize($count, $singular, $plural) {
 	$word = $count == 1 ? $singular : $plural;
 	return "{$count} {$word}";
 }
+
+
+function pages($current, $total, $limit = 20, $link = '') {
+	$pages = ceil($total / $limit);
+
+		if($current > $pages) {
+			return '';
+		} 
+
+		$output = '<ul class="pagination">';
+
+		if($current != 1) {
+			$output .= '<li><a href="'.$link.'">&laquo; First</a></li>';
+			$output .= '<li><a href="'.$link.'?page='.($current-1).'">&#8249; Previous</a></li>';
+		}
+
+		for($i = 1; $i <= $pages; $i++) {
+			if($current == $i) {
+				$output .= '<li><strong>'.$i.'</strong></li>';
+			}
+			else {
+				$output .= '<li><a href="'.$link.'?page='.$i.'">'.$i.'</a></li>';
+			}
+		}
+
+		if($current != $last) {
+			$output .= '<li><a href="'.$link.'?page='.($current+1).'">Next &#8250;</a></li>';
+			$output .= '<li><a href="'.$link.'?page='.$pages.'">Last &raquo;</a></li>';
+		}
+
+		$output .= '</ul>';
+		return $output;
+}
+
+function cycle() {
+    static $index;
+    $values = func_get_args();
+    return $values[($index++ % count($values))];
+}
