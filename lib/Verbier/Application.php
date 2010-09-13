@@ -3,7 +3,7 @@
 namespace Verbier;
 
 /**
- * This is where the magic happens. All API methods are defined here.
+ * The Application class is the heart of the framework and it is here all the magic happen.
  *
  * @package Verbier
  * @author Hans-Kristian Koren
@@ -40,6 +40,11 @@ class Application {
 		'templates' => 'views/'
 	);
 	
+	protected $helpers = array(
+		'core' => array('get', 'post', 'put', 'delete', 'configure', 'set', 'enable', 'disable', 'setting', 'helper', 'layout', 'filter', 'before', 'after', 'halt', 'run', 'render', 'redirect'),
+		'user' => array()
+	);
+	
 	/**
 	 * Holds defined filters.
 	 *
@@ -50,11 +55,13 @@ class Application {
 		'after'  => array()
 	);
 	
-	protected $apiMethods = array(
-		'get', 'post', 'put', 'delete',
-		'render', 'redirect', 'flash',
-		'set', 'enable', 'disable',
-		'before', 'after', 'run'
+	static $plugins = array();
+	
+	protected $coreDependencies = array(
+		'dispatcher' => 'Verbier\Dispatcher',
+		'template'       => 'Verbier\Template',
+		'request'    => 'Verbier\Request',
+		'response'   => 'Verbier\Response'
 	);
 	
 	/**
@@ -64,11 +71,28 @@ class Application {
 	 * @param Config $config 
 	 * @todo Need the fix dependency creation
 	 */
-	public function __construct(Dispatcher $dispatcher = null) {
-		$this->dispatcher = $dispatcher === null ? new Dispatcher($this) : $dispatcher;
-		$this->request    = new Request();
-		$this->response   = new Response();
-		$this->template   = new Template(APP_PATH . '/views/');
+	public function __construct() {
+		foreach ($this->coreDependencies as $dependency => $className) {
+			$this->$dependency = $this->dependency($dependency, $className);
+		}
+		$this->template->setPath(APP_PATH . '/views/');
+		
+		foreach (static::$plugins as $plugin) {
+			$plugin($this);
+		}
+	}
+	
+	public function dependency($name,  $className) {
+		if ($dependency = $this->setting($name)) {
+			return new $dependency();
+		}
+		return in_array($name, array('dispatcher', 'view')) ? new $className($this) : new $className;
+	}
+
+	public function configure($envs, $handler) {
+		if (in_array($this->env, (array) $envs)) {
+			$handler($this);
+		}
 	}
 	
 	/**
@@ -146,18 +170,12 @@ class Application {
 		$this->set($key, false);
 	}
 	
-	/**
-	 * Set/retrieve a flash message.
-	 *
-	 * @param string $name 
-	 * @param string $value 
-	 * @return void
-	 */
-	public function flash($name, $value = null) {
-		if ($value === null) {
-			return FlashMessage::get($name);
-		}
-		FlashMessage::set($name, $value);
+	public function setting($key) {
+		return isset($this->settings[$key]) ? $this->settings[$key] : null;
+	}
+
+	public function helper($helperName, \Closure $closure) {
+		$this->helpers['user'][$helperName] = $closure;
 	}
 	
 	/**
@@ -202,6 +220,10 @@ class Application {
 		$this->filters['after'][] = $filter;
 	}
 	
+	public function halt() {
+		$this->response->finish();
+	}
+	
 	/**
 	 * Run the application.
 	 *
@@ -237,13 +259,28 @@ class Application {
 	 * @param array $options 
 	 * @return void
 	 */
-	public function redirect($location, $options = array()) {
-		if (isset($options['notice'])) {
-			$this->flash('notice', $options['notice']);
-		}
-		$status = isset($options['status']) ? $options['status'] : 302;
+	public function redirect($location, $status = 302) {
 		$this->response->setStatus($status);
 		$this->response->setHeader('Location: ' . $location);
 		$this->response->finish();
+	}
+	
+	public function __call($method, $arguments) {
+		if (isset($this->helpers['user'][$method])) {
+			return call_user_func_array($this->helpers['user'][$method], $arguments);
+		}
+		throw new \BadMethodCallException('Call to undefined method '.$method.' on ' . get_class($this));
+	}
+	
+	public function getHelpers() {
+		return array_merge($this->helpers['core'], array_keys($this->helpers['user']));
+	}
+	
+	static public function registerPlugin($pluginName, \Closure $closure) {
+		static::$plugins[$pluginName] = $closure;
+	}
+	
+	static public function unregisterPlugin($pluginName) {
+		unset(static::$plugins[$pluginName]);
 	}
 }
