@@ -20,7 +20,7 @@ class Template {
 	 *
 	 * @var string
 	 */
-	protected $directory;
+	protected $path;
 	
 	/**
 	 * The layout to use.
@@ -31,11 +31,12 @@ class Template {
 	
 	/**
 	 * Constructor.
-	 *
-	 * @param string $directory 
 	 */
-	public function __construct($directory) {
-		$this->directory = $directory;
+	public function __construct() {
+	}
+	
+	public function setPath($path) {
+		$this->path = $path;
 	}
 	
 	/**
@@ -68,8 +69,8 @@ class Template {
 	 * @return string The rendered template.
 	 */
 	public function renderWithLayout($templateName) {
-		$this->contentForLayout = $this->renderWithoutLayout($templateName);
-		return $this->render($this->layout);
+		$this->layoutContent = $this->renderWithoutLayout($templateName);
+		return $this->renderWithoutLayout('layouts/' . $this->layout);
 	}
 	
 	/**
@@ -81,7 +82,7 @@ class Template {
 	public function renderWithoutLayout($templateName) {
 		ob_start();
 		
-		$path = $this->directory . $templateName . '.phtml';
+		$path = $this->path . $templateName . '.phtml';
 		if (!is_readable($path)) {
 			throw new \Exception(sprintf(static::TEMPLATE_NOT_FOUND, $path));
 		}
