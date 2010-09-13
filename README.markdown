@@ -3,7 +3,9 @@ verbier
 
 verbier is a framework inspired by Sinatra.
 
-	[sudo] pear install pearhub/verbier
+	[sudo] pear install pearhub/verbier (OLD VERSION)
+	
+	git clone instead to the the latest build.
 
 ## Why?
 Every programming language ought to have at least five Sinatra inspired frameworks.
@@ -97,7 +99,7 @@ Configuration can be done `configure()`. It takes two parameters: the environmen
 		disable('errors');
 	})
 	
-	configure('*', function() {
+	configure(array('prod', 'dev'), function() {
 		set('root', __DIR__);
 	});
 
