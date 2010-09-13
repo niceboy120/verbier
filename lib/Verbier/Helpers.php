@@ -1,10 +1,18 @@
 <?php
 
 function display_flash_notice() {
-	$message = \Verbier\FlashMessage::get('notice');
+	$message = flash('notice');
 	if ($message !== NULL) {
 		return content_tag('p', $message, array('class' => 'flash-notice'));
 	}
+}
+
+function tags_list($tags, $connector = 'and') {
+	$list = array();
+	foreach ($tags as $tag) {
+		$list[] = link_to("#{$tag}", url('/tags/%s', $tag->name));
+	}
+	return array_to_sentence($list, $connector);
 }
 
 function h($string) {
@@ -78,20 +86,27 @@ function link_to($label, $link, array $options = array()) {
 	return content_tag('a', $label, array_merge($options, array('href' => $link)));
 }
 
+function url($args) {
+	$args = func_get_args();
+	$url = APP_URL . array_shift($args);
+	return vsprintf($url, $args);
+}
+
 
 function error_messages_for($object) {
 	if (!is_object($object) || !$object->hasErrors()) {
 		return NULL;
 	}
 	
-	$messages = $object->getErrors();
+	$messages = $object->getFullErrorMessages();
 	if (is_array($messages)) {
 		$errors = array();
 		foreach ($messages as $name => $value) {
 			$errors[] = content_tag('li', $value);	
 		}
 		
-		return content_tag('strong', count($errors) . ' error(s) prohibitied this from being saved') . content_tag('ul', implode("\n", $errors));
+		$html = content_tag('h2', count($errors) . ' error(s) prohibitied this from being saved') . content_tag('ul', implode("\n", $errors));
+		return content_tag('div', $html, array('class' => 'error-explanation'));
 	}
 	return NULL;
 }
@@ -145,7 +160,7 @@ function array_to_sentence($items, $connector = 'and') {
 		$items = implode(', ', $items);
 		$items .= ' ' . $connector . ' ' . $lastItem;
 	}
-	return is_array($items) ? $items[0] : (string) $items;
+	return is_array($items) ? current($items) : (string) $items;
 }
 
 /**
@@ -154,16 +169,30 @@ function array_to_sentence($items, $connector = 'and') {
  * @param string $string  The string to slugify
  * @return string
  */
-function slugify($string) {
+function slugify($text) {
 	$map = array(
 		'-' => '_',
 		' ' => '-',
 		'&' => 'and',
-		
+		'@' => 'at',
 	);
-	$string = strtr($string, $map);
-	$string = preg_replace('/[^.-a-zA-Z0-9\s_]/i', '', $string);
-	return trim(strtolower($string));
+	
+	$text = strtr($text, $map);
+    $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+    $text = trim($text, '-');
+
+	if (function_exists('iconv')) {
+		$text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
+	}
+
+    $text = strtolower($text);
+	$text = preg_replace('~[^-\w]+~', '', $text);
+
+	if (empty($text)){
+		return 'n-a';
+	}
+
+    return $text;
 }
 
 /**
@@ -189,8 +218,8 @@ function pages($current, $total, $limit = 20, $link = '') {
 		$output = '<ul class="pagination">';
 
 		if($current != 1) {
-			$output .= '<li><a href="'.$link.'">&laquo; First</a></li>';
-			$output .= '<li><a href="'.$link.'?page='.($current-1).'">&#8249; Previous</a></li>';
+			$output .= '<li><a href="'.$link.'?page=1">&laquo; '.t('First').'</a></li>';
+			$output .= '<li><a href="'.$link.'?page='.($current-1).'">&#8249; '.t('Previous').'</a></li>';
 		}
 
 		for($i = 1; $i <= $pages; $i++) {
@@ -202,9 +231,9 @@ function pages($current, $total, $limit = 20, $link = '') {
 			}
 		}
 
-		if($current != $last) {
-			$output .= '<li><a href="'.$link.'?page='.($current+1).'">Next &#8250;</a></li>';
-			$output .= '<li><a href="'.$link.'?page='.$pages.'">Last &raquo;</a></li>';
+		if($current != $pages) {
+			$output .= '<li><a href="'.$link.'?page='.($current+1).'">'.t('Next').' &#8250;</a></li>';
+			$output .= '<li><a href="'.$link.'?page='.$pages.'">'.t('Last').' &raquo;</a></li>';
 		}
 
 		$output .= '</ul>';
