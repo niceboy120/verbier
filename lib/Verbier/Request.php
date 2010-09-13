@@ -15,7 +15,7 @@ class Request {
 	 *
 	 * @var array
 	 */
-	protected $env = array();
+	public $environment = array();
 	
 	/**
 	 * Array of request parameters. These includes _GET, _POST and arguments from the router
@@ -46,7 +46,7 @@ class Request {
 	}
 	
 	public function env($name) {
-		return isset($this->env[$name]) ? $this->env[$name] : NULL;
+		return isset($this->environment[$name]) ? $this->environment[$name] : NULL;
 	}
 	
 	public function param($name) {
@@ -194,7 +194,7 @@ class Request {
 	
 	protected function initHeaders() {
 		$headers = array();
-		foreach ($this->env as $key => $value) {
+		foreach ($this->environment as $key => $value) {
 			if (substr($key, 0, 5) === 'HTTP_') {
 				$headerName = strtolower(substr($key, 5));
 				$headers[$headerName] = $value;
