@@ -99,6 +99,8 @@ class Response {
 		510 => 'Not Extended'
 	);
 	
+	protected $isFinished = FALSE;
+	
 	/**
 	 * Set the HTTP status code
 	 *
@@ -140,10 +142,6 @@ class Response {
 	
 	public function setContent($content) {
 		$this->content = $content;
-	}
-	
-	public function appendContent($content) {
-		$this->content .= $content;
 	}
 	
 	public function getContent() {
@@ -194,6 +192,10 @@ class Response {
 	 * @return void
 	 */
 	public function finish() {
+		if ($this->isFinished) {
+			return;
+		}
+		$this->isFinished = TRUE;
 		$this->sendHeaders();
 		echo $this->getContent();
 	}
