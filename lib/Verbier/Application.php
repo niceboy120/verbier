@@ -40,6 +40,11 @@ class Application {
 		'templates' => 'views/'
 	);
 	
+	/**
+ 	 * Array of methods that are available as global functions.
+	 *
+	 * @var array
+	 */
 	protected $helpers = array(
 		'core' => array('get', 'post', 'put', 'delete', 'configure', 'set', 'enable', 'disable', 'setting', 'helper', 'layout', 'filter', 'before', 'after', 'halt', 'run', 'render', 'redirect'),
 		'user' => array()
@@ -55,8 +60,18 @@ class Application {
 		'after'  => array()
 	);
 	
+	/**
+	 * Array of registered plugins
+	 *
+	 * @var array
+	 */
 	static $plugins = array();
 	
+	/**
+	 * Array of default dependencies
+	 *
+	 * @var array
+	 */
 	protected $coreDependencies = array(
 		'dispatcher' => 'Verbier\Dispatcher',
 		'template'       => 'Verbier\Template',
@@ -82,13 +97,27 @@ class Application {
 		}
 	}
 	
-	public function dependency($name,  $className) {
+	/**
+	 * Get a dependent object
+	 *
+	 * @param string $name
+	 * @param string @name
+	 * @return object
+	 */
+	public function dependency($name, $className) {
 		if ($dependency = $this->setting($name)) {
 			return new $dependency();
 		}
 		return in_array($name, array('dispatcher', 'view')) ? new $className($this) : new $className;
 	}
-
+	
+	/**
+	 * Set configuration for environments $envs
+	 *
+	 * @param array $envs
+	 * @param \Closure $handler
+	 * @return void
+	 */
 	public function configure($envs, $handler) {
 		if (in_array($this->env, (array) $envs)) {
 			$handler($this);
@@ -170,10 +199,23 @@ class Application {
 		$this->set($key, false);
 	}
 	
+	/**
+	 * Get a setting value.
+	 *
+	 * @param string $key 
+	 * @return mixed
+	 */
 	public function setting($key) {
 		return isset($this->settings[$key]) ? $this->settings[$key] : null;
 	}
-
+	
+	/**
+	 * Add a helper method.
+	 *
+	 * @param string $helperName
+	 * @param \Closure $closure 
+	 * @return void
+	 */
 	public function helper($helperName, \Closure $closure) {
 		$this->helpers['user'][$helperName] = $closure;
 	}
@@ -220,6 +262,11 @@ class Application {
 		$this->filters['after'][] = $filter;
 	}
 	
+	/**
+	 * Finish the response (halt execution)
+	 *
+	 * @return void
+	 */
 	public function halt() {
 		$this->response->finish();
 	}
@@ -272,14 +319,29 @@ class Application {
 		throw new \BadMethodCallException('Call to undefined method '.$method.' on ' . get_class($this));
 	}
 	
+	/**
+	 * Get an array of registered helpers.
+	 *
+	 * @return array
+	 */
 	public function getHelpers() {
 		return array_merge($this->helpers['core'], array_keys($this->helpers['user']));
 	}
 	
+	/**
+	 * Register a plugin.
+	 *
+	 * @return void
+	 */
 	static public function registerPlugin($pluginName, \Closure $closure) {
 		static::$plugins[$pluginName] = $closure;
 	}
 	
+	/**
+	 * Unregister a plugin.
+	 *
+	 * @return void
+	 */
 	static public function unregisterPlugin($pluginName) {
 		unset(static::$plugins[$pluginName]);
 	}
