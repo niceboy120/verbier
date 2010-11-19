@@ -137,5 +137,5 @@ Verbier allows you to register plugins to your app using the `registerPlugin` me
 
 
 ## Other
-Turns out whatthejeff has released another sinatra inspired php framework: breeze. Awesome work, I have incorporated some of his ideas. Two so similar projects you ask? Yep, I've been working on this for a year or so and don't want to kill it because of a new kid in town.
+Turns out whatthejeff has released another sinatra inspired php framework: breeze. Awesome work, I have incorporated some of his ideas. Two so similar projects you may ask? Yes, I've been working on this for more than a year I and don't want to kill it because of a new kid in town.
 
